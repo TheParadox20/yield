@@ -1,0 +1,105 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Poppins", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --color-navy: #19283b;
+  --color-gold: #8f8062;
+  --color-ink: #202322;
+  --color-body: #141414;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* the sticky variation nav must not cover the heading it scrolls to */
+  scroll-padding-top: 92px;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  color: var(--color-body);
+  background: #fff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ---------- shared calculator controls ---------- */
+
+.yc-pill[aria-pressed="true"] {
+  background: var(--color-navy);
+  border-color: var(--color-navy);
+  color: #fff;
+}
+
+.yc-seg[aria-pressed="true"] {
+  background: var(--color-navy);
+  color: #fff;
+}
+[data-card="dark"] .yc-seg[aria-pressed="true"] {
+  background: #fff;
+  color: var(--color-navy);
+}
+
+/* tabular figures keep the animated readouts from jittering as digits change */
+.yc-figure {
+  font-variant-numeric: tabular-nums;
+}
+
+.yc-range {
+  accent-color: var(--color-navy);
+  height: 22px;
+  cursor: pointer;
+}
+
+.yc-check {
+  accent-color: var(--color-navy);
+  cursor: pointer;
+}
+
+.yc-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23a4a4a4' stroke-width='1.6' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  padding-right: 40px;
+  cursor: pointer;
+}
+[data-card="dark"] .yc-select option {
+  color: var(--color-body);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+}
+
+/* ---------- scroll reveals ---------- */
+
+.reveal,
+.reveal-stagger > * {
+  opacity: 0;
+  transform: translateY(30px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal.is-visible,
+.reveal-stagger.is-visible > * {
+  opacity: 1;
+  transform: none;
+}
+.reveal-stagger.is-visible > *:nth-child(2) {
+  transition-delay: 0.12s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal,
+  .reveal-stagger > * {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
