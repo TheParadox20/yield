@@ -5,7 +5,7 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex, nofollow" />
-    <title>97 Alta — Yield calculator</title>
+    <title>97 Alta — Bulk acquisition returns</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -14,77 +14,172 @@
     />
   </head>
   <body>
-    <!-- ============ Yield calculator ============ -->
+    <!-- ============ Bulk acquisition return calculator ============ -->
     <section id="returns" class="border-t border-black/25">
       <div class="mx-auto w-full max-w-[1440px] px-3 py-16 md:px-10 lg:py-[104px] xl:px-16">
         <h2 class="reveal text-[clamp(1.65rem,2.43vw,2.1875rem)] font-bold text-black">Calculate Your Returns</h2>
         <p class="reveal mt-3 max-w-[620px] text-[clamp(1rem,1.3vw,1.125rem)] leading-8 text-body">
-          Choose a residence and a letting strategy to see your projected rental income and yield.
+          Choose how many of each residence you want and a letting strategy — the bulk discount is applied
+          automatically. Figures run to Month 72: 36 months to Practical Completion, then a three-year hold.
         </p>
 
         <div class="reveal-stagger mt-12 grid gap-8 lg:mt-16 lg:grid-cols-2 lg:gap-14">
           <div class="flex flex-col gap-10">
             <div>
-              <p class="text-base font-bold text-navy">Choose your residence</p>
-              <div id="yc-typology" class="mt-4 flex flex-wrap gap-3" role="group" aria-label="Residence type">
-                <button type="button" data-typology="mini" aria-pressed="true" class="yc-pill flex h-[46px] items-center rounded-full border border-[#a4a4a4] px-5 text-[clamp(0.9rem,1vw,1rem)] font-medium text-body transition-colors duration-300 hover:border-navy">Mini 1 Bed</button>
-                <button type="button" data-typology="one" aria-pressed="false" class="yc-pill flex h-[46px] items-center rounded-full border border-[#a4a4a4] px-5 text-[clamp(0.9rem,1vw,1rem)] font-medium text-body transition-colors duration-300 hover:border-navy">1 Bed</button>
-                <button type="button" data-typology="two" aria-pressed="false" class="yc-pill flex h-[46px] items-center rounded-full border border-[#a4a4a4] px-5 text-[clamp(0.9rem,1vw,1rem)] font-medium text-body transition-colors duration-300 hover:border-navy">2 Bed</button>
-                <button type="button" data-typology="loft" aria-pressed="false" class="yc-pill flex h-[46px] items-center rounded-full border border-[#a4a4a4] px-5 text-[clamp(0.9rem,1vw,1rem)] font-medium text-body transition-colors duration-300 hover:border-navy">Loft<span class="ml-2 h-[6px] w-[6px] shrink-0 rounded-full bg-gold" title="Indicative pricing — pending client confirmation"></span></button>
-                <button type="button" data-typology="duplex" aria-pressed="false" class="yc-pill flex h-[46px] items-center rounded-full border border-[#a4a4a4] px-5 text-[clamp(0.9rem,1vw,1rem)] font-medium text-body transition-colors duration-300 hover:border-navy">Duplex<span class="ml-2 h-[6px] w-[6px] shrink-0 rounded-full bg-gold" title="Indicative pricing — pending client confirmation"></span></button>
-                <button type="button" data-typology="penthouse" aria-pressed="false" class="yc-pill flex h-[46px] items-center rounded-full border border-[#a4a4a4] px-5 text-[clamp(0.9rem,1vw,1rem)] font-medium text-body transition-colors duration-300 hover:border-navy">Penthouse<span class="ml-2 h-[6px] w-[6px] shrink-0 rounded-full bg-gold" title="Indicative pricing — pending client confirmation"></span></button>
+              <p class="text-base font-bold text-navy">Choose your residences</p>
+              <p class="mt-2 max-w-[520px] text-base text-body/70">
+                Add as many of each as you plan to buy — you can mix typologies.
+              </p>
+              <div id="yc-basket" class="mt-4 flex flex-col gap-2" role="group" aria-label="Residences and quantities">
+                <div data-typology="mini" class="yc-row flex items-center justify-between gap-4 rounded-2xl border border-[#a4a4a4] px-4 py-3 transition-colors duration-300 sm:px-5">
+                  <div class="min-w-0">
+                    <p class="flex items-center text-[clamp(0.9rem,1vw,1rem)] font-medium text-navy">Mini 1 Bed</p>
+                    <p class="mt-1 text-sm text-body/60"><span data-row-size class="yc-figure">396 sqft</span> &middot; <span data-row-price class="yc-figure">KES 7,000,000</span> each</p>
+                  </div>
+                  <div class="flex shrink-0 items-center gap-2">
+                    <button type="button" data-step="-1" aria-label="Remove one Mini 1 Bed" class="flex h-9 w-9 items-center justify-center rounded-full border border-[#a4a4a4] text-lg font-medium text-body transition-colors duration-300 hover:border-navy disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-[#a4a4a4]">&minus;</button>
+                    <span data-row-count aria-live="polite" class="yc-figure w-7 text-center text-base font-medium text-navy">2</span>
+                    <button type="button" data-step="1" aria-label="Add one Mini 1 Bed" class="flex h-9 w-9 items-center justify-center rounded-full border border-[#a4a4a4] text-lg font-medium text-body transition-colors duration-300 hover:border-navy disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-[#a4a4a4]">+</button>
+                  </div>
+                </div>
+                <div data-typology="one" class="yc-row flex items-center justify-between gap-4 rounded-2xl border border-[#a4a4a4] px-4 py-3 transition-colors duration-300 sm:px-5">
+                  <div class="min-w-0">
+                    <p class="flex items-center text-[clamp(0.9rem,1vw,1rem)] font-medium text-navy">1 Bed</p>
+                    <p class="mt-1 text-sm text-body/60"><span data-row-size class="yc-figure">576 sqft</span> &middot; <span data-row-price class="yc-figure">KES 10,200,000</span> each</p>
+                  </div>
+                  <div class="flex shrink-0 items-center gap-2">
+                    <button type="button" data-step="-1" aria-label="Remove one 1 Bed" class="flex h-9 w-9 items-center justify-center rounded-full border border-[#a4a4a4] text-lg font-medium text-body transition-colors duration-300 hover:border-navy disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-[#a4a4a4]">&minus;</button>
+                    <span data-row-count aria-live="polite" class="yc-figure w-7 text-center text-base font-medium text-navy">3</span>
+                    <button type="button" data-step="1" aria-label="Add one 1 Bed" class="flex h-9 w-9 items-center justify-center rounded-full border border-[#a4a4a4] text-lg font-medium text-body transition-colors duration-300 hover:border-navy disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-[#a4a4a4]">+</button>
+                  </div>
+                </div>
+                <div data-typology="two" class="yc-row flex items-center justify-between gap-4 rounded-2xl border border-[#a4a4a4] px-4 py-3 transition-colors duration-300 sm:px-5">
+                  <div class="min-w-0">
+                    <p class="flex items-center text-[clamp(0.9rem,1vw,1rem)] font-medium text-navy">2 Bed</p>
+                    <p class="mt-1 text-sm text-body/60"><span data-row-size class="yc-figure">1,130 sqft</span> &middot; <span data-row-price class="yc-figure">KES 15,000,000</span> each</p>
+                  </div>
+                  <div class="flex shrink-0 items-center gap-2">
+                    <button type="button" data-step="-1" aria-label="Remove one 2 Bed" class="flex h-9 w-9 items-center justify-center rounded-full border border-[#a4a4a4] text-lg font-medium text-body transition-colors duration-300 hover:border-navy disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-[#a4a4a4]">&minus;</button>
+                    <span data-row-count aria-live="polite" class="yc-figure w-7 text-center text-base font-medium text-navy">1</span>
+                    <button type="button" data-step="1" aria-label="Add one 2 Bed" class="flex h-9 w-9 items-center justify-center rounded-full border border-[#a4a4a4] text-lg font-medium text-body transition-colors duration-300 hover:border-navy disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-[#a4a4a4]">+</button>
+                  </div>
+                </div>
               </div>
-              <p class="mt-4 text-base text-body/70">
-                Average size <span id="yc-size" class="yc-figure font-medium text-navy">396 sqft</span>
+              <p class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-base text-body/70">
+                <span id="yc-totals" class="yc-figure font-medium text-navy">6 units &middot; 3,650 sqft</span>
+                <button type="button" id="yc-clear" class="text-sm font-medium text-body/60 underline underline-offset-4 transition-colors duration-300 hover:text-navy">Clear all</button>
+              </p>
+            </div>
+
+            <div>
+              <p class="text-base font-bold text-navy">Your bulk discount</p>
+              <p class="mt-2 max-w-[520px] text-base text-body/70">
+                Applied automatically on the total list value of your basket.
+              </p>
+              <ol id="yc-tiers" class="mt-4 grid gap-2 sm:grid-cols-2" aria-label="Bulk discount tiers">
+                <li data-tier="0.1" class="yc-tier flex items-center justify-between rounded-xl border border-[#a4a4a4] px-4 py-2.5 transition-colors duration-300">
+                  <span class="text-sm text-body/70">KES 30 &ndash; 40m</span>
+                  <span class="yc-figure text-sm font-medium text-navy">10%</span>
+                </li>
+                <li data-tier="0.15" class="yc-tier flex items-center justify-between rounded-xl border border-[#a4a4a4] px-4 py-2.5 transition-colors duration-300">
+                  <span class="text-sm text-body/70">KES 40 &ndash; 50m</span>
+                  <span class="yc-figure text-sm font-medium text-navy">15%</span>
+                </li>
+                <li data-tier="0.2" class="yc-tier flex items-center justify-between rounded-xl border border-[#a4a4a4] px-4 py-2.5 transition-colors duration-300">
+                  <span class="text-sm text-body/70">KES 50 &ndash; 100m</span>
+                  <span class="yc-figure text-sm font-medium text-navy">20%</span>
+                </li>
+                <li data-tier="0.25" class="yc-tier flex items-center justify-between rounded-xl border border-[#a4a4a4] px-4 py-2.5 transition-colors duration-300">
+                  <span class="text-sm text-body/70">KES 100m+</span>
+                  <span class="yc-figure text-sm font-medium text-navy">25%</span>
+                </li>
+              </ol>
+              <p id="yc-tier-note" aria-live="polite" class="mt-3 text-sm text-body/70">
+                20% off list &mdash; a saving of KES 11,920,000.
               </p>
             </div>
 
             <div>
               <p class="text-base font-bold text-navy">Choose a letting strategy</p>
               <div id="yc-strategy" class="mt-4 flex flex-wrap gap-3" role="group" aria-label="Letting strategy">
-                <button type="button" data-strategy="unfurnished" aria-pressed="false" class="yc-pill flex h-[46px] items-center rounded-full border border-[#a4a4a4] px-5 text-[clamp(0.9rem,1vw,1rem)] font-medium text-body transition-colors duration-300 hover:border-navy">Long-term &middot; Unfurnished</button>
-                <button type="button" data-strategy="furnished" aria-pressed="false" class="yc-pill flex h-[46px] items-center rounded-full border border-[#a4a4a4] px-5 text-[clamp(0.9rem,1vw,1rem)] font-medium text-body transition-colors duration-300 hover:border-navy">Long-term &middot; Furnished</button>
-                <button type="button" data-strategy="airbnb" aria-pressed="true" class="yc-pill flex h-[46px] items-center rounded-full border border-[#a4a4a4] px-5 text-[clamp(0.9rem,1vw,1rem)] font-medium text-body transition-colors duration-300 hover:border-navy">Short-stay &middot; Airbnb</button>
+                <button type="button" data-strategy="furnished" aria-pressed="true" class="yc-pill flex h-[46px] items-center rounded-full border border-[#a4a4a4] px-5 text-[clamp(0.9rem,1vw,1rem)] font-medium text-body transition-colors duration-300 hover:border-navy">Furnished</button>
+                <button type="button" data-strategy="unfurnished" aria-pressed="false" class="yc-pill flex h-[46px] items-center rounded-full border border-[#a4a4a4] px-5 text-[clamp(0.9rem,1vw,1rem)] font-medium text-body transition-colors duration-300 hover:border-navy">Unfurnished</button>
               </div>
             </div>
 
-            <p class="max-w-[520px] text-sm leading-6 text-body/60">
-              Airbnb projections assume 75% occupancy, net of 18% platform fees. All figures are estimates before
-              income tax and exclude the monthly service charge, which is shown separately. Actual returns vary.
+            <div>
+              <p class="text-base font-bold text-navy">Assumed occupancy</p>
+              <div id="yc-occupancy" class="mt-4 flex flex-wrap gap-3" role="group" aria-label="Assumed occupancy">
+                <button type="button" data-occupancy="0.6" aria-pressed="false" class="yc-pill flex h-[46px] items-center rounded-full border border-[#a4a4a4] px-5 text-[clamp(0.9rem,1vw,1rem)] font-medium text-body transition-colors duration-300 hover:border-navy">60%</button>
+                <button type="button" data-occupancy="0.7" aria-pressed="true" class="yc-pill flex h-[46px] items-center rounded-full border border-[#a4a4a4] px-5 text-[clamp(0.9rem,1vw,1rem)] font-medium text-body transition-colors duration-300 hover:border-navy">70%</button>
+                <button type="button" data-occupancy="0.8" aria-pressed="false" class="yc-pill flex h-[46px] items-center rounded-full border border-[#a4a4a4] px-5 text-[clamp(0.9rem,1vw,1rem)] font-medium text-body transition-colors duration-300 hover:border-navy">80%</button>
+              </div>
+            </div>
+
+            <p id="yc-assumptions" class="max-w-[520px] text-sm leading-6 text-body/60">
+              Short-stay assumes nightly rates of USD 70 / 80 / 100 at KES 130 to the dollar, less 28% variable
+              costs (platform, management and cleaning) and the annual service charge, with furniture deducted
+              once. Rents escalate 5% a year across the three-year hold.
             </p>
           </div>
 
           <div class="rounded-2xl bg-navy px-7 py-9 text-white shadow-xl md:px-10 md:py-11">
-            <p class="text-base font-medium text-white/70">Projected gross yield</p>
+            <p class="text-base font-medium text-white/70">Projected return per year</p>
             <p class="mt-2 flex items-end gap-2">
-              <span id="yc-yield" class="yc-figure text-[clamp(3.25rem,6vw,4.75rem)] font-bold leading-none text-gold">25.2%</span>
-              <span class="pb-2 text-base font-medium text-white/60">per year</span>
+              <span id="yc-return" class="yc-figure text-[clamp(3.25rem,6vw,4.75rem)] font-bold leading-none text-gold">14.9%</span>
+              <span class="pb-2 text-base font-medium text-white/60">to Month 72</span>
             </p>
 
             <div class="my-8 h-[3px] w-full bg-gold/70" aria-hidden="true"></div>
 
-            <dl class="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
+            <p id="yc-qty-note" class="mb-6 text-sm text-white/55">
+              Totals below are for <span class="yc-figure font-medium text-white/80">2 &times; Mini 1 Bed, 3 &times; 1 Bed and 1 &times; 2 Bed</span>.
+            </p>
+
+            <p class="text-sm font-medium uppercase tracking-wide text-white/40">Going in</p>
+            <dl class="mt-4 grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
               <div>
-                <dt class="text-sm font-medium uppercase tracking-wide text-white/55">Purchase price</dt>
-                <dd id="yc-price" class="yc-figure mt-1 text-[clamp(1.25rem,1.7vw,1.5rem)] font-bold">KES 6,900,000</dd>
+                <dt class="text-sm font-medium uppercase tracking-wide text-white/55">List price</dt>
+                <dd id="yc-list" class="yc-figure mt-1 text-[clamp(1.25rem,1.7vw,1.5rem)] font-bold">KES 59,600,000</dd>
               </div>
               <div>
-                <dt class="text-sm font-medium uppercase tracking-wide text-white/55">Monthly income</dt>
-                <dd id="yc-monthly" class="yc-figure mt-1 text-[clamp(1.25rem,1.7vw,1.5rem)] font-bold">KES 145,000</dd>
+                <dt class="text-sm font-medium uppercase tracking-wide text-white/55">Your offer price</dt>
+                <dd id="yc-offer" class="yc-figure mt-1 text-[clamp(1.25rem,1.7vw,1.5rem)] font-bold text-gold">KES 47,680,000</dd>
               </div>
               <div>
-                <dt class="text-sm font-medium uppercase tracking-wide text-white/55">Service charge</dt>
-                <dd id="yc-sc" class="yc-figure mt-1 text-[clamp(1.25rem,1.7vw,1.5rem)] font-bold text-white/80">&minus; KES 10,000/mo</dd>
+                <dt class="text-sm font-medium uppercase tracking-wide text-white/55">Acquisition costs</dt>
+                <dd id="yc-acq" class="yc-figure mt-1 text-[clamp(1.25rem,1.7vw,1.5rem)] font-bold text-white/80">+ KES 2,384,000</dd>
               </div>
               <div>
-                <dt class="text-sm font-medium uppercase tracking-wide text-white/55">Net annual income</dt>
-                <dd id="yc-net" class="yc-figure mt-1 text-[clamp(1.25rem,1.7vw,1.5rem)] font-bold text-gold">KES 1,620,000</dd>
+                <dt class="text-sm font-medium uppercase tracking-wide text-white/55">Total cash deployed</dt>
+                <dd id="yc-deployed" class="yc-figure mt-1 text-[clamp(1.25rem,1.7vw,1.5rem)] font-bold">KES 50,064,000</dd>
+              </div>
+            </dl>
+
+            <p class="mt-9 text-sm font-medium uppercase tracking-wide text-white/40">Coming out by Month 72</p>
+            <dl class="mt-4 grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
+              <div>
+                <dt class="text-sm font-medium uppercase tracking-wide text-white/55">Net rent &middot; 3 years</dt>
+                <dd id="yc-rental" class="yc-figure mt-1 text-[clamp(1.25rem,1.7vw,1.5rem)] font-bold">KES 27,228,925</dd>
+              </div>
+              <div>
+                <dt class="text-sm font-medium uppercase tracking-wide text-white/55">Exit value</dt>
+                <dd id="yc-exit" class="yc-figure mt-1 text-[clamp(1.25rem,1.7vw,1.5rem)] font-bold">KES 83,964,447</dd>
+              </div>
+              <div>
+                <dt class="text-sm font-medium uppercase tracking-wide text-white/55">Total profit</dt>
+                <dd id="yc-profit" class="yc-figure mt-1 text-[clamp(1.25rem,1.7vw,1.5rem)] font-bold text-gold">KES 61,129,373</dd>
+              </div>
+              <div>
+                <dt class="text-sm font-medium uppercase tracking-wide text-white/55">Money multiple</dt>
+                <dd id="yc-multiple" class="yc-figure mt-1 text-[clamp(1.25rem,1.7vw,1.5rem)] font-bold">2.22&times;</dd>
               </div>
             </dl>
 
             <p id="yc-summary" class="mt-8 border-t border-white/15 pt-6 text-base leading-7 text-white/80">
-              A <strong class="font-medium text-white">Mini 1 Bed</strong> on short-stay could earn about
-              <strong class="font-medium text-gold">KES 1,620,000</strong> a year after service charge.
+              <strong class="font-medium text-white">2 &times; Mini 1 Bed, 3 &times; 1 Bed and 1 &times; 2 Bed</strong>
+              on short-stay at 70% occupancy could return about
+              <strong class="font-medium text-gold">KES 61,129,373</strong> in profit by Month 72.
             </p>
           </div>
         </div>
@@ -103,7 +198,12 @@
 
         <p class="reveal mt-10 flex items-start gap-3 text-sm leading-6 text-body/55">
           <span class="mt-[7px] h-[6px] w-[6px] shrink-0 rounded-full bg-gold"></span>
-          Loft, Duplex and Penthouse figures are indicative placeholders pending confirmed pricing from the client.
+          Capital appreciation is taken at 15% over the construction period and 7% a year for the three years
+          after Practical Completion (June 2029), with no sales costs at exit. Payment is assumed at 20% on
+          signing and the 80% balance over six months, so the return per year runs from a weighted Month 3.
+          Acquisition costs are 4% stamp duty plus 1% legal and service-charge deposits. Furniture is deducted
+          from rental income rather than counted as cash deployed. Figures exclude capital gains tax and any
+          financing costs. Estimates only — actual returns vary.
         </p>
       </div>
     </section>

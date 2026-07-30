@@ -27,6 +27,19 @@ body {
   border-color: var(--color-navy);
   color: #fff;
 }
+/* a residence row lights up once at least one of it is in the basket */
+.yc-row[data-active="true"] {
+  border-color: var(--color-navy);
+  background: color-mix(in srgb, var(--color-navy) 4%, transparent);
+}
+/* the tier the basket currently qualifies for */
+.yc-tier[data-active="true"] {
+  border-color: var(--color-navy);
+  background: var(--color-navy);
+}
+.yc-tier[data-active="true"] span {
+  color: #fff;
+}
 /* tabular figures keep the animated readouts from jittering as digits change */
 .yc-figure {
   font-variant-numeric: tabular-nums;
