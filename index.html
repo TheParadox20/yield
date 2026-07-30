@@ -5,7 +5,7 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex, nofollow" />
-    <title>97 Alta — Yield calculator variations</title>
+    <title>97 Alta — Yield calculator</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -14,7 +14,100 @@
     />
   </head>
   <body>
-    <div id="app"></div>
+    <!-- ============ Yield calculator ============ -->
+    <section id="returns" class="border-t border-black/25">
+      <div class="mx-auto w-full max-w-[1440px] px-3 py-16 md:px-10 lg:py-[104px] xl:px-16">
+        <h2 class="reveal text-[clamp(1.65rem,2.43vw,2.1875rem)] font-bold text-black">Calculate Your Returns</h2>
+        <p class="reveal mt-3 max-w-[620px] text-[clamp(1rem,1.3vw,1.125rem)] leading-8 text-body">
+          Choose a residence and a letting strategy to see your projected rental income and yield.
+        </p>
+
+        <div class="reveal-stagger mt-12 grid gap-8 lg:mt-16 lg:grid-cols-2 lg:gap-14">
+          <div class="flex flex-col gap-10">
+            <div>
+              <p class="text-base font-bold text-navy">Choose your residence</p>
+              <div id="yc-typology" class="mt-4 flex flex-wrap gap-3" role="group" aria-label="Residence type">
+                <button type="button" data-typology="mini" aria-pressed="true" class="yc-pill flex h-[46px] items-center rounded-full border border-[#a4a4a4] px-5 text-[clamp(0.9rem,1vw,1rem)] font-medium text-body transition-colors duration-300 hover:border-navy">Mini 1 Bed</button>
+                <button type="button" data-typology="one" aria-pressed="false" class="yc-pill flex h-[46px] items-center rounded-full border border-[#a4a4a4] px-5 text-[clamp(0.9rem,1vw,1rem)] font-medium text-body transition-colors duration-300 hover:border-navy">1 Bed</button>
+                <button type="button" data-typology="two" aria-pressed="false" class="yc-pill flex h-[46px] items-center rounded-full border border-[#a4a4a4] px-5 text-[clamp(0.9rem,1vw,1rem)] font-medium text-body transition-colors duration-300 hover:border-navy">2 Bed</button>
+                <button type="button" data-typology="loft" aria-pressed="false" class="yc-pill flex h-[46px] items-center rounded-full border border-[#a4a4a4] px-5 text-[clamp(0.9rem,1vw,1rem)] font-medium text-body transition-colors duration-300 hover:border-navy">Loft<span class="ml-2 h-[6px] w-[6px] shrink-0 rounded-full bg-gold" title="Indicative pricing — pending client confirmation"></span></button>
+                <button type="button" data-typology="duplex" aria-pressed="false" class="yc-pill flex h-[46px] items-center rounded-full border border-[#a4a4a4] px-5 text-[clamp(0.9rem,1vw,1rem)] font-medium text-body transition-colors duration-300 hover:border-navy">Duplex<span class="ml-2 h-[6px] w-[6px] shrink-0 rounded-full bg-gold" title="Indicative pricing — pending client confirmation"></span></button>
+                <button type="button" data-typology="penthouse" aria-pressed="false" class="yc-pill flex h-[46px] items-center rounded-full border border-[#a4a4a4] px-5 text-[clamp(0.9rem,1vw,1rem)] font-medium text-body transition-colors duration-300 hover:border-navy">Penthouse<span class="ml-2 h-[6px] w-[6px] shrink-0 rounded-full bg-gold" title="Indicative pricing — pending client confirmation"></span></button>
+              </div>
+              <p class="mt-4 text-base text-body/70">
+                Average size <span id="yc-size" class="yc-figure font-medium text-navy">396 sqft</span>
+              </p>
+            </div>
+
+            <div>
+              <p class="text-base font-bold text-navy">Choose a letting strategy</p>
+              <div id="yc-strategy" class="mt-4 flex flex-wrap gap-3" role="group" aria-label="Letting strategy">
+                <button type="button" data-strategy="unfurnished" aria-pressed="false" class="yc-pill flex h-[46px] items-center rounded-full border border-[#a4a4a4] px-5 text-[clamp(0.9rem,1vw,1rem)] font-medium text-body transition-colors duration-300 hover:border-navy">Long-term &middot; Unfurnished</button>
+                <button type="button" data-strategy="furnished" aria-pressed="false" class="yc-pill flex h-[46px] items-center rounded-full border border-[#a4a4a4] px-5 text-[clamp(0.9rem,1vw,1rem)] font-medium text-body transition-colors duration-300 hover:border-navy">Long-term &middot; Furnished</button>
+                <button type="button" data-strategy="airbnb" aria-pressed="true" class="yc-pill flex h-[46px] items-center rounded-full border border-[#a4a4a4] px-5 text-[clamp(0.9rem,1vw,1rem)] font-medium text-body transition-colors duration-300 hover:border-navy">Short-stay &middot; Airbnb</button>
+              </div>
+            </div>
+
+            <p class="max-w-[520px] text-sm leading-6 text-body/60">
+              Airbnb projections assume 75% occupancy, net of 18% platform fees. All figures are estimates before
+              income tax and exclude the monthly service charge, which is shown separately. Actual returns vary.
+            </p>
+          </div>
+
+          <div class="rounded-2xl bg-navy px-7 py-9 text-white shadow-xl md:px-10 md:py-11">
+            <p class="text-base font-medium text-white/70">Projected gross yield</p>
+            <p class="mt-2 flex items-end gap-2">
+              <span id="yc-yield" class="yc-figure text-[clamp(3.25rem,6vw,4.75rem)] font-bold leading-none text-gold">25.2%</span>
+              <span class="pb-2 text-base font-medium text-white/60">per year</span>
+            </p>
+
+            <div class="my-8 h-[3px] w-full bg-gold/70" aria-hidden="true"></div>
+
+            <dl class="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
+              <div>
+                <dt class="text-sm font-medium uppercase tracking-wide text-white/55">Purchase price</dt>
+                <dd id="yc-price" class="yc-figure mt-1 text-[clamp(1.25rem,1.7vw,1.5rem)] font-bold">KES 6,900,000</dd>
+              </div>
+              <div>
+                <dt class="text-sm font-medium uppercase tracking-wide text-white/55">Monthly income</dt>
+                <dd id="yc-monthly" class="yc-figure mt-1 text-[clamp(1.25rem,1.7vw,1.5rem)] font-bold">KES 145,000</dd>
+              </div>
+              <div>
+                <dt class="text-sm font-medium uppercase tracking-wide text-white/55">Service charge</dt>
+                <dd id="yc-sc" class="yc-figure mt-1 text-[clamp(1.25rem,1.7vw,1.5rem)] font-bold text-white/80">&minus; KES 10,000/mo</dd>
+              </div>
+              <div>
+                <dt class="text-sm font-medium uppercase tracking-wide text-white/55">Net annual income</dt>
+                <dd id="yc-net" class="yc-figure mt-1 text-[clamp(1.25rem,1.7vw,1.5rem)] font-bold text-gold">KES 1,620,000</dd>
+              </div>
+            </dl>
+
+            <p id="yc-summary" class="mt-8 border-t border-white/15 pt-6 text-base leading-7 text-white/80">
+              A <strong class="font-medium text-white">Mini 1 Bed</strong> on short-stay could earn about
+              <strong class="font-medium text-gold">KES 1,620,000</strong> a year after service charge.
+            </p>
+          </div>
+        </div>
+
+        <div class="reveal mt-10 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between lg:mt-14">
+          <p class="max-w-[560px] text-base leading-7 text-body">
+            Ready to make it yours? Our team will walk you through pricing, availability and payment plans.
+          </p>
+          <button type="button" data-invest class="inline-flex h-[52px] shrink-0 items-center justify-center gap-3 rounded-full bg-navy px-8 text-base font-medium text-white transition-colors duration-300 hover:bg-gold">
+            Invest Now
+            <svg width="26" height="10" viewBox="0 0 26 10" fill="none" aria-hidden="true">
+              <path d="M0 5h24M20.5 1 25 5l-4.5 4" stroke="currentColor" stroke-width="1.2" />
+            </svg>
+          </button>
+        </div>
+
+        <p class="reveal mt-10 flex items-start gap-3 text-sm leading-6 text-body/55">
+          <span class="mt-[7px] h-[6px] w-[6px] shrink-0 rounded-full bg-gold"></span>
+          Loft, Duplex and Penthouse figures are indicative placeholders pending confirmed pricing from the client.
+        </p>
+      </div>
+    </section>
+
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

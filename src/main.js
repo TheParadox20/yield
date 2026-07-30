@@ -1,84 +1,126 @@
 import './style.css'
-import { observeReveals, variantHeader } from './lib/dom.js'
-import classic from './variants/classic.js'
-import transparent from './variants/transparent.js'
-import financing from './variants/financing.js'
-import compact from './variants/compact.js'
-import matrix from './variants/matrix.js'
 
-const VARIANTS = [classic, transparent, financing, compact, matrix]
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-/* Still open with the client. Listed on the page so whoever reviews these
- * variations can see which numbers are ours and which are theirs. */
-const OPEN = [
-  'Is the short-stay figure gross at full occupancy, or already net of empty nights and Airbnb fees?',
-  'Does the Elite Stays management fee come out of that figure, or on top of it?',
-  'Confirmed prices, sizes and service charges for Loft, Duplex and Penthouse.',
-  'Cash discount, deposit tiers and instalment period for each payment route.',
-  'Is the unit sold furnished, or is furnishing the buyer&rsquo;s cost?',
-  'Does the service charge escalate, and is there a separate sinking fund?',
-  'Where the rents came from — comparable buildings, or a projection?',
-]
+/* ---------- Scroll reveals ---------- */
+const revealTargets = document.querySelectorAll('.reveal, .reveal-stagger')
 
-const shell = `
-  <header class="bg-navy text-white">
-    <div class="mx-auto w-full max-w-[1440px] px-3 py-14 md:px-10 lg:py-20 xl:px-16">
-      <p class="text-sm font-medium uppercase tracking-[0.18em] text-gold">97 Alta &middot; internal review</p>
-      <h1 class="mt-4 max-w-[900px] text-[clamp(2rem,3.4vw,3rem)] font-bold leading-tight">
-        Yield calculator &mdash; five variations
-      </h1>
-      <p class="mt-5 max-w-[720px] text-[clamp(1rem,1.3vw,1.125rem)] leading-8 text-white/70">
-        The same rental schedule presented five ways, from the section as originally drafted through to a
-        full cost breakdown. Each one names the audience it is built for and the open question it settles.
-        Every figure not confirmed by the client is marked.
-      </p>
-    </div>
-  </header>
+if (reducedMotion) {
+  revealTargets.forEach((t) => t.classList.add('is-visible'))
+} else {
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return
+        entry.target.classList.add('is-visible')
+        io.unobserve(entry.target)
+      })
+    },
+    { rootMargin: '0px 0px -12% 0px', threshold: 0.08 },
+  )
+  revealTargets.forEach((t) => io.observe(t))
+}
 
-  <nav class="sticky top-0 z-20 border-b border-black/15 bg-white/95 backdrop-blur">
-    <div class="mx-auto flex w-full max-w-[1440px] items-center gap-2 overflow-x-auto px-3 py-3 md:px-10 xl:px-16">
-      ${VARIANTS.map((v) => `
-        <a href="#${v.id}" class="flex h-[38px] shrink-0 items-center gap-2 rounded-full border border-[#a4a4a4] px-4 text-sm font-medium text-body transition-colors duration-300 hover:border-navy hover:bg-navy hover:text-white">
-          <span class="text-gold">${v.letter}</span> ${v.name}
-        </a>`).join('')}
-    </div>
-  </nav>
+/* ---------- Yield calculator ---------- */
+const yieldSection = document.getElementById('returns')
 
-  <main>
-    ${VARIANTS.map((v, i) => `
-      <section id="${v.id}" class="${i ? 'border-t border-black/25' : ''}">
-        <div class="mx-auto w-full max-w-[1440px] px-3 py-16 md:px-10 lg:py-[104px] xl:px-16">
-          ${variantHeader(v)}
-          <div data-mount="${v.id}"></div>
-        </div>
-      </section>`).join('')}
-  </main>
+if (yieldSection) {
+  // Source figures from the "Expected Rental Returns" schedule.
+  // rent = gross monthly rent per strategy; sc = monthly service charge.
+  // Loft, Duplex and Penthouse are our placeholders — replace once the client
+  // confirms pricing, and drop the gold dot from their pills when they do.
+  const DATA = {
+    mini: { label: 'Mini 1 Bed', size: 396, price: 6_900_000, sc: 10_000, rent: { unfurnished: 70_000, furnished: 120_000, airbnb: 145_000 } },
+    one: { label: '1 Bed', size: 576, price: 9_800_000, sc: 10_000, rent: { unfurnished: 90_000, furnished: 150_000, airbnb: 180_000 } },
+    two: { label: '2 Bed', size: 1130, price: 15_000_000, sc: 15_000, rent: { unfurnished: 130_000, furnished: 190_000, airbnb: 290_000 } },
+    loft: { label: 'Loft', size: 780, price: 12_500_000, sc: 12_000, rent: { unfurnished: 110_000, furnished: 165_000, airbnb: 230_000 } },
+    duplex: { label: 'Duplex', size: 1650, price: 22_000_000, sc: 20_000, rent: { unfurnished: 180_000, furnished: 250_000, airbnb: 360_000 } },
+    penthouse: { label: 'Penthouse', size: 2400, price: 38_000_000, sc: 30_000, rent: { unfurnished: 300_000, furnished: 420_000, airbnb: 600_000 } },
+  }
+  const STRATEGY_LABEL = {
+    unfurnished: 'long-term (unfurnished)',
+    furnished: 'long-term (furnished)',
+    airbnb: 'short-stay',
+  }
 
-  <footer class="border-t border-black/25 bg-[#faf9f7]">
-    <div class="mx-auto w-full max-w-[1440px] px-3 py-16 md:px-10 lg:py-20 xl:px-16">
-      <p class="text-sm font-medium uppercase tracking-[0.18em] text-gold">Before any of these ship</p>
-      <h2 class="mt-3 text-[clamp(1.5rem,2.2vw,2rem)] font-bold text-black">Still open with the client</h2>
-      <ol class="mt-8 grid max-w-[1000px] gap-4 md:grid-cols-2">
-        ${OPEN.map((q, i) => `
-          <li class="flex gap-4 rounded-xl bg-white px-5 py-4 ring-1 ring-black/10">
-            <span class="yc-figure shrink-0 text-sm font-bold text-gold">${String(i + 1).padStart(2, '0')}</span>
-            <span class="text-[0.95rem] leading-7 text-body">${q}</span>
-          </li>`).join('')}
-      </ol>
-      <p class="mt-10 max-w-[760px] text-sm leading-7 text-body/60">
-        Placeholder assumptions used throughout: 75% short-stay occupancy, 18% platform fee, 20% short-stay
-        management, 8% long-let letting fee, one void month a year, 4% stamp duty, 1.5% legal fees, furnishing
-        at KES 1,800&ndash;2,400/sqft, and a 14.5% mortgage over 20 years. None of these are client figures.
-      </p>
-    </div>
-  </footer>`
+  const nf = new Intl.NumberFormat('en-KE')
+  const kes = (n) => `KES ${nf.format(Math.round(n))}`
 
-document.querySelector('#app').innerHTML = shell
+  const typologyGroup = document.getElementById('yc-typology')
+  const strategyGroup = document.getElementById('yc-strategy')
+  const el = {
+    size: document.getElementById('yc-size'),
+    yield: document.getElementById('yc-yield'),
+    price: document.getElementById('yc-price'),
+    monthly: document.getElementById('yc-monthly'),
+    sc: document.getElementById('yc-sc'),
+    net: document.getElementById('yc-net'),
+    summary: document.getElementById('yc-summary'),
+  }
 
-VARIANTS.forEach((v) => {
-  const mount = document.querySelector(`[data-mount="${v.id}"]`)
-  mount.innerHTML = v.html
-  v.init(mount)
-})
+  let typology = 'mini'
+  let strategy = 'airbnb'
+  let yieldAnim = null
 
-observeReveals()
+  const selected = (group) => group.querySelector('[aria-pressed="true"]')
+
+  const setPressed = (group, button) => {
+    selected(group)?.setAttribute('aria-pressed', 'false')
+    button.setAttribute('aria-pressed', 'true')
+  }
+
+  // Count the headline yield from its current value to the new one for a little polish.
+  const animateYield = (to) => {
+    if (reducedMotion) {
+      el.yield.textContent = `${to.toFixed(1)}%`
+      return
+    }
+    const from = parseFloat(el.yield.textContent) || 0
+    const duration = 500
+    const easeOut = (t) => 1 - Math.pow(1 - t, 3)
+    const startTime = performance.now()
+    if (yieldAnim) cancelAnimationFrame(yieldAnim)
+    const tick = (now) => {
+      const progress = Math.min((now - startTime) / duration, 1)
+      el.yield.textContent = `${(from + (to - from) * easeOut(progress)).toFixed(1)}%`
+      if (progress < 1) yieldAnim = requestAnimationFrame(tick)
+    }
+    yieldAnim = requestAnimationFrame(tick)
+  }
+
+  const render = () => {
+    const unit = DATA[typology]
+    const monthly = unit.rent[strategy]
+    const annualGross = monthly * 12
+    const netAnnual = (monthly - unit.sc) * 12
+    const grossYield = (annualGross / unit.price) * 100
+
+    el.size.textContent = `${nf.format(unit.size)} sqft`
+    el.price.textContent = kes(unit.price)
+    el.monthly.textContent = kes(monthly)
+    el.sc.innerHTML = `&minus; ${kes(unit.sc)}/mo`
+    el.net.textContent = kes(netAnnual)
+    el.summary.innerHTML =
+      `A <strong class="font-medium text-white">${unit.label}</strong> on ${STRATEGY_LABEL[strategy]} could earn about ` +
+      `<strong class="font-medium text-gold">${kes(netAnnual)}</strong> a year after service charge.`
+    animateYield(grossYield)
+  }
+
+  typologyGroup?.addEventListener('click', (event) => {
+    const btn = event.target.closest('[data-typology]')
+    if (!btn) return
+    typology = btn.dataset.typology
+    setPressed(typologyGroup, btn)
+    render()
+  })
+
+  strategyGroup?.addEventListener('click', (event) => {
+    const btn = event.target.closest('[data-strategy]')
+    if (!btn) return
+    strategy = btn.dataset.strategy
+    setPressed(strategyGroup, btn)
+    render()
+  })
+
+  render()
+}
