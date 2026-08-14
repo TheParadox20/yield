@@ -32,11 +32,12 @@ const returnsSection = document.getElementById('returns')
 if (returnsSection) {
   // price = mid-floor list price (row 9); sc = annual service charge (row 32);
   // adr = nightly rate in USD (row 29); longLet = monthly rent unfurnished (row 39);
-  // furniture = one-off cost per unit (row 38). Size is off the sales sheet, not the model.
+  // furniture = one-off cost per unit — client revision of Aug 2026 (800K / 1M / 1.2M),
+  // superseding row 38. Size is off the sales sheet, not the model.
   const DATA = {
-    mini: { label: 'Mini 1 Bed', size: 396, price: 7_000_000, sc: 120_000, adr: 70, longLet: 70_000, furniture: 1_000_000 },
+    mini: { label: 'Mini 1 Bed', size: 396, price: 7_000_000, sc: 120_000, adr: 70, longLet: 70_000, furniture: 800_000 },
     one: { label: '1 Bed', size: 576, price: 10_200_000, sc: 120_000, adr: 80, longLet: 90_000, furniture: 1_000_000 },
-    two: { label: '2 Bed', size: 1130, price: 15_000_000, sc: 180_000, adr: 100, longLet: 130_000, furniture: 1_500_000 },
+    two: { label: '2 Bed', size: 1130, price: 15_000_000, sc: 180_000, adr: 100, longLet: 130_000, furniture: 1_200_000 },
   }
 
   const MODEL = {
@@ -49,7 +50,8 @@ if (returnsSection) {
     postCompletionPa: 0.07, // C44
     holdYears: 3, // C45
     acquisitionRate: 0.05, // C24 — 4% stamp duty + 1% legal/SC
-    deploymentMonth: 3, // weighted capital deployment (20% on signing, 80% over 6 months)
+    depositRate: 0.3, // minimum deposit on signing, share of offer price
+    deploymentMonth: 3, // weighted capital deployment (30% on signing, 70% over 6 months)
     exitMonth: 72, // 36-month build + 3-year hold
   }
 
@@ -88,6 +90,8 @@ if (returnsSection) {
     return: document.getElementById('yc-return'),
     list: document.getElementById('yc-list'),
     offer: document.getElementById('yc-offer'),
+    deposit: document.getElementById('yc-deposit'),
+    furnitureCost: document.getElementById('yc-furniture'),
     acq: document.getElementById('yc-acq'),
     deployed: document.getElementById('yc-deployed'),
     rental: document.getElementById('yc-rental'),
@@ -162,6 +166,7 @@ if (returnsSection) {
     const { list } = basketTotals
     const discount = discountFor(list)
     const offer = list * (1 - discount) // C21
+    const deposit = offer * MODEL.depositRate
     const acquisition = offer * MODEL.acquisitionRate // C24
     const deployed = offer + acquisition // C25
 
@@ -185,6 +190,7 @@ if (returnsSection) {
       discount,
       saving: list - offer,
       offer,
+      deposit,
       acquisition,
       deployed,
       netRental,
@@ -255,6 +261,8 @@ if (returnsSection) {
 
     el.list.textContent = kes(t.list)
     el.offer.textContent = kes(t.offer)
+    el.deposit.textContent = kes(t.deposit)
+    el.furnitureCost.textContent = strategy === 'furnished' ? kes(t.furniture) : 'None required'
     el.acq.innerHTML = `+ ${kes(t.acquisition)}`
     el.deployed.textContent = kes(t.deployed)
     el.rental.textContent = kes(t.netRental)
